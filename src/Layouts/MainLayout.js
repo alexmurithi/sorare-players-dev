@@ -1,7 +1,13 @@
 import React from "react";
+import { Container } from "@mui/material";
 
 const MainLayout = ({ children }) => {
-  return <main>{children}</main>;
+  return (
+    <Container maxWidth="xl">
+      <main>{children}</main>
+    </Container>
+  );
+  
 };
 
-export default React.memo(MainLayout)
+export default React.memo(MainLayout);

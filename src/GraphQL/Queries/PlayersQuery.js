@@ -1,45 +1,40 @@
 import { gql } from "@apollo/client";
 
-export const ALL_PLAYERS = gql`
-  query ALL_PLAYERS($slug: String!, $after: String!) {
-    club(slug: $slug) {
-      players(after: $after) {
-        nodes {
+export const PLAYERS_INFO = gql`
+  query PLAYER_INFO($slug: String!) {
+    playerInfo(slug: $slug) {
+      id
+      displayName
+      age
+      slug
+      position
+      birthDate
+      shirtNumber
+      subscriptionsCount
+      pictureUrl
+      country {
+        code
+      }
+      status {
+        id
+        lastFifteenSo5Appearances
+        lastFifteenSo5AverageScore
+        lastFiveSo5Appearances
+        lastFiveSo5AverageScore
+        playingStatus
+      }
+      activeClub {
+        id
+        name
+        pictureSecondaryUrl
+        domesticLeague {
+          id
           displayName
-          slug
-          age
-          birthDate
-          position
-          country {
-            slug
-          }
-          subscriptionsCount
-          pictureUrl
-          shirtNumber
-          activeInjuries {
-            active
-          }
-          activeClub {
-            name
-            id
-            pictureSecondaryUrl
-          }
-          allSo5Scores(first: 50) {
-            nodes {
-              score
-            }
-          }
-          status {
-            lastFifteenSo5Appearances
-            lastFifteenSo5AverageScore
-            lastFiveSo5Appearances
-            lastFiveSo5AverageScore
-            playingStatus
-          }
         }
-
-        pageInfo {
-          endCursor
+      }
+      allSo5Scores {
+        nodes {
+          score
         }
       }
     }

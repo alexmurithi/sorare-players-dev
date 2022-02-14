@@ -1,9 +1,11 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { ApolloClient, createHttpLink } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
+import cache from "./Cache";
 
 const httpLink = new createHttpLink({
-  uri: "https://api.sorare.com/graphql",
+  uri: "http://localhost:4000/api",
+  credentials: "same-origin",
 });
 
 const retryLink = new RetryLink({
@@ -39,6 +41,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const client = new ApolloClient({
   link: retryLink.concat(errorLink).concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: cache,
 });
 export default client;
