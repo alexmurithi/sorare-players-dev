@@ -86,8 +86,7 @@ const PlayerListTable = () => {
     {
       title: "Scores",
       field: "scores",
-      render: (rowData) =>
-        rowData.scores.filter((x) => x !== null && x !== 0).join(),
+      render: (rowData) => rowData.scores.join(),
     },
   ];
 
