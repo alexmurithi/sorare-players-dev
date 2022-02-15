@@ -4,7 +4,7 @@ import { RetryLink } from "@apollo/client/link/retry";
 import cache from "./Cache";
 
 const httpLink = new createHttpLink({
-  uri: "http://localhost:4000/api",
+  uri: "https://sorare-players-api.herokuapp.com/api",
   credentials: "same-origin",
 });
 
