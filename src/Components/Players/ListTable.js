@@ -22,10 +22,8 @@ const PlayerListTable = () => {
   );
 
   if (networkStatus === NetworkStatus.refetch) return "Refetching data...";
-  if (loading) return null;
+  if (loading) return <div>Loading data .... Please Wait!</div>;
   if (error) return `Error! ${error}`;
-
-  console.log("data", data.playerInfo);
 
   const rows = data.playerInfo.map((info) => ({
     id: info.id,
@@ -50,8 +48,6 @@ const PlayerListTable = () => {
 
     scores: info.allSo5Scores.nodes.map((score) => score.score),
   }));
-
-  console.log(rows);
 
   const columns = [
     {
