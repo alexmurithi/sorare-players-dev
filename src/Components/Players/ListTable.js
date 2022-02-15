@@ -9,6 +9,7 @@ import { NetworkStatus } from "@apollo/client";
 import { PLAYERS_INFO } from "../../GraphQL/Queries/PlayersQuery";
 import { useQuery } from "@apollo/client";
 
+//SLUG//
 const SLUG = "philadelphia-union-chester-pennsylvania";
 
 const PlayerListTable = () => {
