@@ -23,10 +23,12 @@
     "xlsx": "^0.17.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "serve -s build",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "heroku-postbuild": "npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -48,5 +50,8 @@
   },
   "devDependencies": {
     "eslint-config-react-app": "^7.0.0"
+  },
+  "engines": {
+    "yarn": "1.x"
   }
 }
