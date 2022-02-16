@@ -5,6 +5,7 @@ import cache from "./Cache";
 
 const httpLink = new createHttpLink({
   uri: "https://sorare-players-api.herokuapp.com/api",
+  // uri: "http://localhost:4000/api",
   credentials: "same-origin",
 });
 

@@ -1,8 +1,9 @@
 import { InMemoryCache } from "@apollo/client";
 import moment from "moment";
+import { relayStylePagination } from "@apollo/client/utilities";
 const cache = new InMemoryCache({
   typePolicies: {
-    PlayerInfo: {
+    Player: {
       fields: {
         birthDate: {
           read(birthDate) {

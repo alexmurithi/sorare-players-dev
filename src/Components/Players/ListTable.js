@@ -13,40 +13,60 @@ import { useQuery } from "@apollo/client";
 const SLUG = "philadelphia-union-chester-pennsylvania";
 
 const PlayerListTable = () => {
-  const { data, loading, error, refetch, networkStatus, fetchMore } = useQuery(
+  const { data, loading, error, networkStatus, fetchMore } = useQuery(
     PLAYERS_INFO,
     {
-      variables: { slug: SLUG },
+      variables: { slug: SLUG, after: null },
       notifyOnNetworkStatusChange: true,
     }
   );
 
-  if (networkStatus === NetworkStatus.refetch) return "Refetching data...";
+  const onLoadMore = () => {
+    //destructure end cursor
+    const { endCursor } = data.club.players.pageInfo;
+
+    fetchMore({
+      variables: {
+        after: endCursor,
+      },
+
+      updateQuery: (prevResult, { fetchMoreResult }) => {
+        fetchMoreResult.club.players.edges = [
+          ...prevResult.club.players.edges,
+          ...fetchMoreResult.club.players.edges,
+        ];
+        return fetchMoreResult;
+      },
+    });
+  };
+  if (networkStatus === NetworkStatus.fetchMore) return "Refetching data...";
   if (loading) return <div>Loading data .... Please Wait!</div>;
   if (error) return `Error! ${error}`;
 
-  const rows = data.playerInfo.map((info) => ({
-    id: info.id,
-    displayName: info.displayName,
-    age: info.age,
-    position: info.position,
-    birthDate: info.birthDate,
-    country: info.country.code,
-    shirtNumber: info.shirtNumber,
-    pictureUrl: info.pictureUrl,
-    subscriptionsCount: info.subscriptionsCount,
-    lastFifteenSo5Appearances: info.status.lastFifteenSo5Appearances,
-    lastFifteenSo5AverageScore: info.status.lastFifteenSo5AverageScore,
-    lastFiveSo5Appearances: info.status.lastFiveSo5Appearances,
-    lastFiveSo5AverageScore: info.status.lastFiveSo5AverageScore,
-    playingStatus: info.status.playingStatus ? info.status.playingStatus : null,
-    activeClub: info.activeClub ? info.activeClub.name : null,
+  const rows = data.club.players.edges.map((info) => ({
+    id: info.node.id,
+    displayName: info.node.displayName,
+    age: info.node.age,
+    position: info.node.position,
+    birthDate: info.node.birthDate,
+    country: info.node.country.code,
+    shirtNumber: info.node.shirtNumber,
+    pictureUrl: info.node.pictureUrl,
+    subscriptionsCount: info.node.subscriptionsCount,
+    lastFifteenSo5Appearances: info.node.status.lastFifteenSo5Appearances,
+    lastFifteenSo5AverageScore: info.node.status.lastFifteenSo5AverageScore,
+    lastFiveSo5Appearances: info.node.status.lastFiveSo5Appearances,
+    lastFiveSo5AverageScore: info.node.status.lastFiveSo5AverageScore,
+    playingStatus: info.node.status.playingStatus
+      ? info.node.status.playingStatus
+      : null,
+    activeClub: info.node.activeClub ? info.node.activeClub.name : null,
     league:
-      info.activeClub && info.activeClub.domesticLeague
-        ? info.activeClub.domesticLeague.displayName
+      info.node.activeClub && info.node.activeClub.domesticLeague
+        ? info.node.activeClub.domesticLeague.displayName
         : null,
 
-    scores: info.allSo5Scores.nodes.map((score) => score.score),
+    scores: info.node.allSo5Scores.nodes.map((score) => score.score),
   }));
 
   const columns = [
@@ -106,20 +126,35 @@ const PlayerListTable = () => {
       tooltip: "Export Data",
       onClick: () => exportDownloadData(),
     },
-    {
+    // {
+    //   icon: () => (
+    //     <Button
+    //       variant="outlined"
+    //       color="primary"
+    //       component="div"
+    //       startIcon={<RefreshIcon />}
+    //     >
+    //       Refetch Data
+    //     </Button>
+    //   ),
+    //   isFreeAction: true,
+    //   tooltip: "Refetch Data",
+    //   onClick: () => refetch(),
+    // },
+    data.club.players.pageInfo.hasNextPage && {
       icon: () => (
         <Button
           variant="outlined"
           color="primary"
-          component="div"
           startIcon={<RefreshIcon />}
+          component="div"
         >
-          Refetch Data
+          Load More
         </Button>
       ),
       isFreeAction: true,
-      tooltip: "Refetch Data",
-      onClick: () => refetch(),
+      tooltip: "Load More Data",
+      onClick: () => onLoadMore(),
     },
   ];
 
